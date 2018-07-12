@@ -26,6 +26,7 @@ SECRET_KEY = '3rf(-%2@n@izb%2d@-xc25scu6n_6xnu68&p8z71q#zneqc(ju'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+# APPEND_TRAILING_SLASH = False
 
 
 # Application definition
