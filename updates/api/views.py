@@ -1,9 +1,11 @@
 import json
 from django.views.generic import View
 from django.http import HttpResponse
-from updates.models import Update as UpdateModel
 
 from cfeapi.mixins import HttpResponseMixin
+
+from updates.forms import UpdateModelForm
+from updates.models import Update as UpdateModel
 from .mixins import CSRFExemptMixin
 
 #recommended way V if youre building a public app. do not separate out and create indivual views for each method.
@@ -22,9 +24,8 @@ class UpdateModelDetailAPIView(HttpResponseMixin, CSRFExemptMixin,View):
 
     def post(self, request, *args, **kwargs):
         # handles create method
-        json_data = {}
-
-        return self.render_to_response(json_data)
+        json_data = json.dumps({"message": "Not allowed, Please use the /api/updates/ endpoint."})
+        return self.render_to_response(json_data, status=403)
 
     def put(self, request, *args, **kwargs):
         # handles update method
@@ -56,7 +57,16 @@ class UpdateModelListAPIView(HttpResponseMixin, CSRFExemptMixin, View):
 
     def post(self, request, *args, **kwargs):
         # handles create method
-        data = json.dumps({'message': 'Unknown Data'})
+        # print(request.POST)
+        form = UpdateModelForm(request.POST)
+        if form.is_valid():
+            obj = form.save(commit=True)
+            obj_data = obj.serialize()
+            return self.render_to_response(obj_data, status=201)
+        if form.errors:
+            data = json.dumps(form.errors)
+            return self.render_to_response(data, status=400)
+        data = {"message": "Not Allowed"}
         return self.render_to_response(data, status=400)
 
     def delete(self, request, *args, **kwargs):
