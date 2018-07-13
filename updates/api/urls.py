@@ -9,5 +9,4 @@ from .views import (
 urlpatterns = [
     url(r'^$', UpdateModelListAPIView.as_view()), # api/updates/ - List/Create
     url(r'^(?P<id>\d+)/$', UpdateModelDetailAPIView.as_view()),
-
 ]
