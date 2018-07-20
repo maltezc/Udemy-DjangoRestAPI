@@ -2,6 +2,8 @@ from django.utils.six import BytesIO
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parseres import JSONParser
 
+from rest_framework import serializers
+
 from status.api.serializers import StatusSerializer
 from status.models import Status
 
@@ -63,7 +65,7 @@ update_serializer.save()
 Delete obj
 '''
 
-data = {'user': 1, "content":"please delete me"}
+data = {'user': 1, "content": "please delete me"}
 create_obj_serializer = StatusSerializer(data=data)
 create_obj_serializer.is_valid()
 create_obj = create_obj_serializer.save() #returns instance of object
@@ -79,3 +81,15 @@ print(obj.delete())
 
 
 #serializers help change data
+
+from rest_framework import serializers
+class CustomSerializer(serializers.Serializer):
+    content =        serializers.CharField()
+    email =          serializers.EmailField()
+
+
+data = {'email': "hello@teamcfe.com", "content": "please delete me"}
+create_obj_serializer = CustomSerializer(data=data)
+if create_obj_serializer.is_valid():
+    valid_data = create_obj_serializer.data
+    print(valid_data)
