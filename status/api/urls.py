@@ -18,17 +18,17 @@ from .views import (
                 StatusAPIView,
                 StatusCreateAPIView,
                 StatusDetailAPIView,
-                # StatusUpdateAPIView,
-                # StatusDeleteAPIView
+                StatusUpdateAPIView,
+                StatusDeleteAPIView
                 )
 
 
 urlpatterns = [
     url(r'^$', StatusAPIView.as_view()),
     url(r'^create/$', StatusCreateAPIView.as_view()),
-    url(r'^(?P<pk>.*)/$', StatusDetailAPIView.as_view()), # <pk> is built in method
-    # url(r'^(?P<id>.*)/update/$', StatusUpdateAPIView.as_view()),
-    # url(r'^(?P<id>.*)/delete/$', StatusDeleteAPIView.as_view()),
+    url(r'^(?P<pk>\d+)/$', StatusDetailAPIView.as_view()), # <pk> is built in method for giving view id
+    url(r'^(?P<pk>\d+)/update/$', StatusUpdateAPIView.as_view()),
+    url(r'^(?P<pk>\d+)/delete/$', StatusDeleteAPIView.as_view()),
 ]
 
 '''
