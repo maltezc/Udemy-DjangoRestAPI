@@ -38,3 +38,14 @@ class StatusAPIView(generics.ListAPIView):
             qs = qs.filter(content__icontains=query)
         return qs
 
+
+class StatusCreateAPIView(generics.CreateAPIView):
+    permission_classes          = []
+    authentication_classes      = []
+    queryset                    = Status.objects.all()
+    serializer_class            = StatusSerializer #necessary
+
+    def perform_create(self, serializer):
+        # Override method ^
+        # eliminates option to choose "author" of post. Author should be logged in user
+        serializer.save(user=self.request.user)
