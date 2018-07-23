@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from .views import (
                 StatusAPIView,
                 # StatusCreateAPIView,
-                StatusDetailAPIView,
+                # StatusDetailAPIView,
                 # StatusUpdateAPIView,
                 # StatusDeleteAPIView
                 )
@@ -25,7 +25,7 @@ from .views import (
 
 urlpatterns = [
     url(r'^$', StatusAPIView.as_view()),
-    url(r'^(?P<pk>\d+)/$', StatusDetailAPIView.as_view()), # <pk> is built in method for giving view id
+    # url(r'^(?P<pk>\d+)/$', StatusDetailAPIView.as_view()), # <pk> is built in method for giving view id
     # url(r'^(?P<pk>\d+)/update/$', StatusUpdateAPIView.as_view()),
     # url(r'^(?P<pk>\d+)/delete/$', StatusDeleteAPIView.as_view()),
 ]
