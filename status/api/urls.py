@@ -16,18 +16,13 @@ Including another URLconf
 from django.conf.urls import url, include
 from .views import (
                 StatusAPIView,
-                # StatusCreateAPIView,
-                # StatusDetailAPIView,
-                # StatusUpdateAPIView,
-                # StatusDeleteAPIView
+                StatusAPIDetailView,
                 )
 
 
 urlpatterns = [
     url(r'^$', StatusAPIView.as_view()),
-    # url(r'^(?P<pk>\d+)/$', StatusDetailAPIView.as_view()), # <pk> is built in method for giving view id
-    # url(r'^(?P<pk>\d+)/update/$', StatusUpdateAPIView.as_view()),
-    # url(r'^(?P<pk>\d+)/delete/$', StatusDeleteAPIView.as_view()),
+    url(r'^(?P<id>\d+)/$', StatusAPIDetailView.as_view()), #shift to id because of lookup field # <pk> is built in method for giving view id
 ]
 
 '''
@@ -38,6 +33,8 @@ Start with:
     /api/status/12/update --> Update
     /api/status/12/delete --> Delete
 
+
+**ENDING WITH THIS ONE** images complicates others. makes this one simpler
 End with:
     /api/status/ --> List --> CRUD 
     /api/status/1/ --> Detail --> CRUD

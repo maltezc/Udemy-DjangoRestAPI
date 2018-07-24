@@ -17,14 +17,63 @@ def is_json(json_data):
     return is_valid
 
 
+class StatusAPIDetailView(mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin, generics.RetrieveAPIView):
+    permission_classes      = []
+    authentication_classes  = []
+    serializer_class        = StatusSerializer  # necessary
+    queryset                = Status.objects.all()
+    lookup_field            = 'id'
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+    # def perform_update(self, serializer):
+    #     serializer.save(updated_by_user=self.request.user)
+    #
+    # def perform_destroy(self, instance):
+    #     if instance is not None:
+    #         return instance.delete()
+    #     return None
 
 class StatusAPIView(
     mixins.CreateModelMixin,
-    mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
     generics.ListAPIView):
+    permission_classes          = []
+    authentication_classes      = []
+    serializer_class            = StatusSerializer #necessary
+    passed_id                   = None
 
+    def get_queryset(self):
+        # /api/status/?q=delete will find all content with keyword delete
+        request = self.request
+        qs = Status.objects.all()
+        query = self.request.GET.get('q')
+        if query is not None:
+            qs = qs.filter(content__icontains=query)
+        return qs
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+        #comes from model mixin
+
+    # def perform_create(self, serializer):
+    #     serializer.save(user=self.request.user)
+
+'''
+class StatusAPIView(
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.ListAPIView):
     permission_classes          = []
     authentication_classes      = []
     serializer_class            = StatusSerializer #necessary
@@ -84,6 +133,8 @@ class StatusAPIView(
         new_passed_id = json_data.get('id', None)
         # print(request.body)
         # request.data
+        print(request.data)
+        requested_id = None # request.data.get('id')
         passed_id = url_passed_id or new_passed_id or None
         self.passed_id = passed_id
         return self.update(request, *args, **kwargs)
@@ -114,10 +165,10 @@ class StatusAPIView(
         self.passed_id = passed_id
         return self.destroy(request, *args, **kwargs)
 
-            # def perform_create(self, serializer):
-        # Override method ^, eliminates option to choose "author" of post. Author should be logged in user
-        # serializer.save(user=self.request.user)
-
+        def perform_create(self, serializer):
+            Override method ^, eliminates option to choose "author" of post. Author should be logged in user
+            serializer.save(user=self.request.user)
+'''
 
 
 
