@@ -20,6 +20,9 @@ class StatusSerializer(serializers.ModelSerializer):
             'content',
             'image'
         ]
+        read_only_fields = ['user'] #GET calls only. Change change users anymore
+
+
 
     #field level validation
     # def validate_<fieldname>(self, value):

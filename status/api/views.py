@@ -1,5 +1,6 @@
 import json
-from rest_framework import generics, mixins
+from rest_framework import generics, mixins, permissions
+from rest_framework.authentication import SessionAuthentication # neccessary for user authentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -42,19 +43,20 @@ class StatusAPIDetailView(mixins.UpdateModelMixin,
     #         return instance.delete()
     #     return None
 
+
+# Login required mixin / decorator
 class StatusAPIView(
     mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
     generics.ListAPIView):
-    permission_classes          = []
-    authentication_classes      = []
+    permission_classes          = [permissions.IsAuthenticatedOrReadOnly] # have to be logged in# if IsAuthenticatedOrReadOnly, user cannot post, data is only read only # this demands that the person had to be authenticated inorder to do the things in this view. ie: create a model
+    authentication_classes      = [SessionAuthentication] #This is how you can be logge in# brings in your user model, Can also do #OATH, JWT
     serializer_class            = StatusSerializer #necessary
     passed_id                   = None
 
     def get_queryset(self):
         # /api/status/?q=delete will find all content with keyword delete
         request = self.request
+        # print(request.user)
         qs = Status.objects.all()
         query = self.request.GET.get('q')
         if query is not None:
@@ -65,8 +67,8 @@ class StatusAPIView(
         return self.create(request, *args, **kwargs)
         #comes from model mixin
 
-    # def perform_create(self, serializer):
-    #     serializer.save(user=self.request.user)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 '''
 class StatusAPIView(
