@@ -33,7 +33,7 @@ JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True, # allows refresh token to work
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
 
-    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+    'JWT_AUTH_HEADER_PREFIX': 'JWT', #<-- what this looks like: Authorization: JWT <token>
     'JWT_AUTH_COOKIE': None,
 
 }
