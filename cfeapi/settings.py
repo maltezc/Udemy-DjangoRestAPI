@@ -129,3 +129,9 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static-server', 'media-root')  #stores uploaded images # '/Users/cfe/def/restapi/'
 MEDIA_URL = '/media/'
+
+
+from cfeapi.restconf.main import *
+
+
+

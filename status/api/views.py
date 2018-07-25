@@ -20,8 +20,7 @@ def is_json(json_data):
 
 class StatusAPIDetailView(mixins.UpdateModelMixin,
     mixins.DestroyModelMixin, generics.RetrieveAPIView):
-    permission_classes      = []
-    authentication_classes  = []
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]    # authentication_classes  = []
     serializer_class        = StatusSerializer  # necessary
     queryset                = Status.objects.all()
     lookup_field            = 'id'
@@ -48,8 +47,7 @@ class StatusAPIDetailView(mixins.UpdateModelMixin,
 class StatusAPIView(
     mixins.CreateModelMixin,
     generics.ListAPIView):
-    permission_classes          = [permissions.IsAuthenticatedOrReadOnly] # have to be logged in# if IsAuthenticatedOrReadOnly, user cannot post, data is only read only # this demands that the person had to be authenticated inorder to do the things in this view. ie: create a model
-    authentication_classes      = [SessionAuthentication] #This is how you can be logge in# brings in your user model, Can also do #OATH, JWT
+    permission_classes          = [permissions.IsAuthenticatedOrReadOnly] # have to be logged in# if IsAuthenticatedOrReadOnly, non-logged in user cannot post, data is only read only # this demands that the person had to be authenticated inorder to do the things in this view. ie: create a post
     serializer_class            = StatusSerializer #necessary
     passed_id                   = None
 
