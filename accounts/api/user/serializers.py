@@ -5,12 +5,14 @@ from django.utils import timezone
 
 from rest_framework import serializers
 
+from status.api.serializers import StatusInLineUserSerializer
+
 User = get_user_model()
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
     uri             = serializers.SerializerMethodField(read_only=True)
-    status_list     = serializers.SerializerMethodField(read_only=True)
+    status          = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
@@ -18,10 +20,25 @@ class UserDetailSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'uri',
+            'status', # same as model name --> user's ownership of that model name
         ]
 
     def get_uri(self, obj):
         return "api/users/{id}/".format(id=obj.id)
 
-    def get_status_list(self, obj):
-        return 'obj'
+    def get_status(self, obj):
+        request = self.context.get('request')
+        limit = 10
+        if request:
+            limit_query = request.GET.get('limit')
+            try:
+                limit = int(limit_query)
+            except:
+                pass
+        qs = obj.status_set.all().order_by("-timestamp") # [:10]
+        data = {
+            'uri': self.get_uri(obj) + "status/",
+            'last': StatusInLineUserSerializer(qs.first()).data,
+            'recent': StatusInLineUserSerializer(qs[:limit], many=True).data
+        }
+        return data
