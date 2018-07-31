@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from accounts.api.serializers import UserPublicSerializer
 from status.models import Status
 
 '''
@@ -12,9 +13,12 @@ Serializers --> validate Data
 
 
 class StatusSerializer(serializers.ModelSerializer):
+    uri         = serializers.SerializerMethodField(read_only=True)
+    user        = UserPublicSerializer(read_only=True)
     class Meta:
         model = Status
         fields = [
+            'uri',
             'id', # ?
             'user',
             'content',
@@ -22,7 +26,8 @@ class StatusSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['user'] #GET calls only. change users anymore
 
-
+    def get_uri(self,obj):
+        return "api/status/{id}/".format(id=obj.id)
 
     #field level validation
     # def validate_<fieldname>(self, value):
