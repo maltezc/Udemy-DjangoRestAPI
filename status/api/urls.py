@@ -22,7 +22,7 @@ from .views import (
 
 urlpatterns = [
     url(r'^$', StatusAPIView.as_view()),
-    url(r'^(?P<id>\d+)/$', StatusAPIDetailView.as_view()), #shift to id because of lookup field # <pk> is built in method for giving view id
+    url(r'^(?P<id>\d+)/$', StatusAPIDetailView.as_view()), #shift to id because of lookup field # <pk> is built in method for giving view id. api/status/12
 ]
 
 '''

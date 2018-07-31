@@ -20,7 +20,7 @@ class StatusSerializer(serializers.ModelSerializer):
             'content',
             'image'
         ]
-        read_only_fields = ['user'] #GET calls only. Change change users anymore
+        read_only_fields = ['user'] #GET calls only. change users anymore
 
 
 

@@ -19,7 +19,9 @@ class AnonPermissionOnly(permissions.BasePermission): #true or false
     def has_permission(self, request, view):
         return not request.user.is_authenticated() # django 2.0 = request.user.is_authenticated
 
+
 class IsOwnerOrReadOnly(permissions.BasePermission):
+    message = "You must be the owner of this content to change it."
     '''
     Object-level permission to only allow owners of an object to edit it.
     Assumes the model instance has an 'owner' attribute.
@@ -31,6 +33,8 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         # Instance must have an attribute named 'owner'.
+        # if obj.user == request.user:
+        #     return True
         return obj.owner == request.user
 
 

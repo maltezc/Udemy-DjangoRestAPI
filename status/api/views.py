@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
+from accounts.api.permissions import IsOwnerOrReadOnly
 from status.models import Status
 from .serializers import StatusSerializer
 
@@ -18,9 +19,11 @@ def is_json(json_data):
     return is_valid
 
 
-class StatusAPIDetailView(mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin, generics.RetrieveAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]    # authentication_classes  = []
+class StatusAPIDetailView(
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.RetrieveAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]    # authentication_classes  = []
     serializer_class        = StatusSerializer  # necessary
     queryset                = Status.objects.all()
     lookup_field            = 'id'
