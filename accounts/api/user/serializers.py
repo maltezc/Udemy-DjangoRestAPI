@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from rest_framework import serializers
+from rest_framework.reverse import reverse as api_reverse #<-- similar to regular django reverse #another version is django hosts
 
 from status.api.serializers import StatusInLineUserSerializer
 
@@ -24,7 +25,8 @@ class UserDetailSerializer(serializers.ModelSerializer):
         ]
 
     def get_uri(self, obj):
-        return "api/users/{id}/".format(id=obj.id)
+        request = self.context.get('request')
+        return api_reverse("api-user:detail", kwargs={"username": obj.username}, request=request)
 
     def get_status(self, obj):
         request = self.context.get('request')
@@ -38,7 +40,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
         qs = obj.status_set.all().order_by("-timestamp") # [:10]
         data = {
             'uri': self.get_uri(obj) + "status/",
-            'last': StatusInLineUserSerializer(qs.first()).data,
-            'recent': StatusInLineUserSerializer(qs[:limit], many=True).data
+            'last': StatusInLineUserSerializer(qs.first(), context={'request': request}).data,
+            'recent': StatusInLineUserSerializer(qs[:limit], many=True, context={'request': request}).data
         }
         return data
