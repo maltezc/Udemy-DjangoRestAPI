@@ -53,16 +53,19 @@ class StatusAPIView(
     permission_classes          = [permissions.IsAuthenticatedOrReadOnly] # have to be logged in# if IsAuthenticatedOrReadOnly, non-logged in user cannot post, data is only read only # this demands that the person had to be authenticated inorder to do the things in this view. ie: create a post
     serializer_class            = StatusSerializer #necessary
     passed_id                   = None
+    search_fields               = ('user__username', 'content', 'user__email')
+    ordering_fields             = ('user__username', 'timestamp')
+    queryset                    = Status.objects.all()
 
-    def get_queryset(self):
-        # /api/status/?q=delete will find all content with keyword delete
-        request = self.request
-        # print(request.user)
-        qs = Status.objects.all()
-        query = self.request.GET.get('q')
-        if query is not None:
-            qs = qs.filter(content__icontains=query)
-        return qs
+    # def get_queryset(self):
+    #     # /api/status/?q=delete will find all content with keyword delete
+    #     request = self.request
+    #     # print(request.user)
+    #     qs = Status.objects.all()
+    #     query = self.request.GET.get('q')
+    #     if query is not None:
+    #         qs = qs.filter(content__icontains=query)
+    #     return qs
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
