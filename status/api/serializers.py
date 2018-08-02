@@ -15,15 +15,24 @@ Serializers --> validate Data
 
 
 
-
 class StatusSerializer(serializers.ModelSerializer):
-    uri         = serializers.SerializerMethodField(read_only=True)
-    # user        = serializers.SerializerMethodField(read_only=True)
-    user        = UserPublicSerializer(read_only=True)
+    uri             = serializers.SerializerMethodField(read_only=True)
+    # user          = serializers.SerializerMethodField(read_only=True)
+    user            = UserPublicSerializer(read_only=True)
+    # user_id          =serializers.PrimaryKeyRelatedField(source='user', read_only=True)
+    # user_id         = serializers.HyperlinkedRelatedField(
+    #     source='user', # works for user foreign key
+    #     lookup_field='username',
+    #     view_name='api-user:detail',
+    #     read_only=True
+    #         )
+
+    # user        =serializers.SlugRelatedField(read_only=True, slug_field='username') # source='email' <-- pulls email info
     class Meta:
         model = Status
         fields = [
             'uri',
+            # 'user_id',
             'id', # ?
             'user',
             'content',
@@ -58,7 +67,7 @@ class StatusSerializer(serializers.ModelSerializer):
         return data
 
 
-class StatusInLineUserSerializer(serializers.ModelSerializer):
+class StatusInLineUserSerializer(StatusSerializer):
     # uri         = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
